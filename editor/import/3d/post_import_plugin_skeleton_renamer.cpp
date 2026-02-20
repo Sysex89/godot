@@ -51,17 +51,19 @@ void PostImportPluginSkeletonRenamer::_internal_process(InternalImportCategory p
 		return;
 	}
 	Skeleton3D *skeleton = Object::cast_to<Skeleton3D>(p_node);
-	if (skeleton) {
-		// Rename bones in Skeleton3D.
-		int len = skeleton->get_bone_count();
-		for (int i = 0; i < len; i++) {
-			String current_bone_name = skeleton->get_bone_name(i);
-			const HashMap<String, String>::ConstIterator new_bone_name = p_rename_map.find(current_bone_name);
-			if (new_bone_name) {
-				skeleton->set_bone_name(i, new_bone_name->value);
-			}
+	if (!skeleton) {
+		return;
+	}
+
+	int len = skeleton->get_bone_count();
+	for (int i = 0; i < len; i++) {
+		String current_bone_name = skeleton->get_bone_name(i);
+		const HashMap<String, String>::ConstIterator new_bone_name = p_rename_map.find(current_bone_name);
+		if (new_bone_name) {
+			skeleton->set_bone_name(i, new_bone_name->value);
 		}
 	}
+
 
 	// Rename bones in Skin.
 	{
